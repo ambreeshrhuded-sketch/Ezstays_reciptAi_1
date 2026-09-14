@@ -1,0 +1,6 @@
+{
+  "name": "HostelReceipt AI - Automated Data Entry & Excel Export",
+  "description": "Production-ready automated receipt data extraction, human review, duplicate detection, 33-column Excel export pipeline, and Phase 2 Bank Reconciliation / Payment Knocking module for hostel fee receipts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

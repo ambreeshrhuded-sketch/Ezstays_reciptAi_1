@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function: checks if user is authenticated with a non-anonymous provider
+    function isNonAnonymousAuth() {
+      return request.auth != null && 
+             request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // Receipt Images partition: receipts/{year}/{month}/{receiptRecordId}/{fileName}
+    match /receipts/{year}/{month}/{receiptRecordId}/{fileName} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Bank Statements partition: bank_statements/{year}/{month}/{statementId}/{fileName}
+    match /bank_statements/{year}/{month}/{statementId}/{fileName} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

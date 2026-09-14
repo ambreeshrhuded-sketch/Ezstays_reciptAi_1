@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function: checks if user is authenticated with a non-anonymous provider
+    function isNonAnonymousAuth() {
+      return request.auth != null && 
+             request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // Receipts collection: sensitive student & payment records
+    match /receipts/{receiptId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Phase 2: Receipt Payment Splits
+    match /receiptPayments/{paymentId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Phase 2: Bank Statement Files
+    match /bankStatements/{statementId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Phase 2: Bank Transactions
+    match /bankTransactions/{transactionId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Phase 2: Reconciliations / Knocking Decisions
+    match /reconciliations/{reconciliationId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Phase 2: Audit Logs
+    match /auditLogs/{logId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+    
+    // Batches collection: batch processing queues
+    match /batches/{batchId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+    
+    // Application settings: configuration & drop-down validation lists
+    match /settings/{settingId} {
+      allow read, write: if isNonAnonymousAuth();
+    }
+
+    // Deny all other unmatched paths by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
